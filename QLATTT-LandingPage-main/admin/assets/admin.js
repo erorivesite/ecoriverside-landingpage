@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let data = [...allCustomers];
 
     if (search)  data = data.filter(c => (c.ho_ten||'').toLowerCase().includes(search) || (c.so_dien_thoai||'').includes(search) || (c.email||'').toLowerCase().includes(search));
-    if (product) data = data.filter(c => (c.san_pham||'').includes(product));
+    if (product) data = data.filter(c => (c.san_pham||'') === product);
     if (budget)  data = data.filter(c => (c.ngan_sach||'') === budget);
     if (dateF) {
       const cutoff = new Date(now);
