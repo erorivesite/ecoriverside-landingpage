@@ -1,10 +1,12 @@
-const Brevo = require('@getbrevo/brevo');
+const SibApiV3Sdk = require('sib-api-v3-sdk');
 
-const apiInstance = new Brevo.TransactionalEmailsApi();
-apiInstance.authentications['api-key'].apiKey = process.env.SMTP_PASS;
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications['api-key'].apiKey = process.env.SMTP_PASS;
+
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 const sendMail = async ({ to, toName, subject, html }) => {
-  const email = new Brevo.SendSmtpEmail();
+  const email = new SibApiV3Sdk.SendSmtpEmail();
   email.sender = { name: 'ECO Riverside', email: process.env.SMTP_USER };
   email.to = [{ email: to, name: toName || to }];
   email.subject = subject;
