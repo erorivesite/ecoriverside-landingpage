@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = true;
 
       try {
-        const response = await fetch('https://qlattt-landingpage-final.onrender.com/api/auth/login', {
+        const response = await fetch('https://ecoriverside-landingpage.onrender.com/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: usernameInput, password: passwordInput })
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. API: Lấy danh sách Khách hàng
     async function loadCustomers() {
       try {
-        const res = await fetch('https://qlattt-landingpage-final.onrender.com/api/dang-ky/danh-sach', { headers: authHeaders });
+        const res = await fetch('https://ecoriverside-landingpage.onrender.com/api/dang-ky/danh-sach', { headers: authHeaders });
         const data = await res.json();
         
         handleAuthError(res.status, data);
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.viewCustomerDetails = async function(id) {
       try {
         // Gọi API lấy chi tiết khách hàng qua ID (Cần đính kèm Token)
-        const res = await fetch(`https://qlattt-landingpage-final.onrender.com/api/dang-ky/${id}`, { headers: authHeaders });
+        const res = await fetch(`https://ecoriverside-landingpage.onrender.com/api/dang-ky/${id}`, { headers: authHeaders });
         const data = await res.json();
         
         handleAuthError(res.status, data);
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadLogs() {
       if (role !== 'admin') return; // Chặn ở UI cho chắc
       try {
-        const res = await fetch('https://qlattt-landingpage-final.onrender.com/api/dang-ky/log', { headers: authHeaders });
+        const res = await fetch('https://ecoriverside-landingpage.onrender.com/api/dang-ky/log', { headers: authHeaders });
         const data = await res.json();
         
         handleAuthError(res.status, data);
@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.viewLogDetails = async function(id) {
       if (role !== 'admin') return;
       try {
-        const res = await fetch(`https://qlattt-landingpage-final.onrender.com/api/dang-ky/log`, { headers: authHeaders }); // Backend chưa có API log/:id nên ta lấy full log rồi filter
+        const res = await fetch(`https://ecoriverside-landingpage.onrender.com/api/dang-ky/log`, { headers: authHeaders }); // Backend chưa có API log/:id nên ta lấy full log rồi filter
         const data = await res.json();
         handleAuthError(res.status, data);
 
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadUsers() {
       if (role !== 'admin') return;
       try {
-        const res = await fetch('https://qlattt-landingpage-final.onrender.com/api/users', { headers: authHeaders });
+        const res = await fetch('https://ecoriverside-landingpage.onrender.com/api/users', { headers: authHeaders });
         const data = await res.json();
         
         handleAuthError(res.status, data);
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const r = document.getElementById('newRole').value;
 
       try {
-        const res = await fetch('https://qlattt-landingpage-final.onrender.com/api/users', {
+        const res = await fetch('https://ecoriverside-landingpage.onrender.com/api/users', {
           method: 'POST',
           headers: authHeaders,
           body: JSON.stringify({ username: u, password: p, role: r })
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.deleteUser = async function(id) {
       if(!confirm('Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản nhân viên này không?')) return;
       try {
-        const res = await fetch(`https://qlattt-landingpage-final.onrender.com/api/users/${id}`, {
+        const res = await fetch(`https://ecoriverside-landingpage.onrender.com/api/users/${id}`, {
           method: 'DELETE',
           headers: authHeaders
         });

@@ -178,7 +178,7 @@ if (mainForm) {
     btn.textContent = 'Đang gửi...';
     btn.disabled = true;
 
-    fetch('https://qlattt-landingpage-final.onrender.com/api/dang-ky', {
+    fetch('https://ecoriverside-landingpage.onrender.com/api/dang-ky', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

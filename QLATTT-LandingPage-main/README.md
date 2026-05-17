@@ -70,7 +70,7 @@ CẤU HÌNH API
 
 Frontend đang gọi API tại:
 
-    https://qlattt-landingpage-final.onrender.com
+    https://ecoriverside-landingpage.onrender.com
 
 --------------------------------------------------
 
@@ -78,7 +78,7 @@ KHI DEPLOY PRODUCTION
 
 Cần thay toàn bộ:
 
-    https://qlattt-landingpage-final.onrender.com
+    https://ecoriverside-landingpage.onrender.com
 
 Thành domain backend thực tế, ví dụ:
 

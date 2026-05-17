@@ -100,5 +100,5 @@ HƯỚNG DẪN CÀI ĐẶT
 
 SERVER
 
-    https://qlattt-landingpage-final.onrender.com
+    https://ecoriverside-landingpage.onrender.com
 ```
