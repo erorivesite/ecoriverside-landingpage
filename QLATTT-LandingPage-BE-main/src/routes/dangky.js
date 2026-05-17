@@ -178,4 +178,11 @@ router.get('/:id', verifyToken, isAdmin, (req, res) => {
   });
 });
 
+router.delete('/:id', verifyToken, isAdmin, (req, res) => {
+  db.query(`DELETE FROM khach_hang WHERE id = ?`, [req.params.id], (err) => {
+    if (err) return res.status(500).json({ success: false });
+    res.json({ success: true });
+  });
+});
+
 module.exports = router;

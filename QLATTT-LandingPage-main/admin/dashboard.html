@@ -16,81 +16,163 @@
       <div class="role" id="displayRole">Role</div>
     </div>
     <div class="nav-menu">
-      <div class="nav-item active" onclick="switchTab('customers')">Khách hàng đăng ký</div>
-      <div class="nav-item" id="navLog" onclick="switchTab('logs')">Log Hệ thống</div>
-      <div class="nav-item" id="navUsers" onclick="switchTab('users')" style="display: none;">Quản lý nhân viên</div>
+      <div class="nav-item active" onclick="switchTab('customers', this)">
+        <i>👥</i> Khách hàng
+      </div>
+      <div class="nav-item" id="navLog" onclick="switchTab('logs', this)">
+        <i>📋</i> Log Hệ thống
+      </div>
+      <div class="nav-item" id="navUsers" onclick="switchTab('users', this)" style="display:none;">
+        <i>🔑</i> Quản lý nhân viên
+      </div>
     </div>
-    <div class="nav-item danger" onclick="logout()">Đăng xuất</div>
+    <div class="nav-item danger" onclick="logout()">⬅ Đăng xuất</div>
   </div>
 
   <div class="main-content">
     <div class="header">
       <h2 id="pageTitle">Danh sách khách hàng</h2>
+      <div class="header-actions">
+        <button class="btn btn-outline btn-small" onclick="exportCSV()">⬇ Xuất CSV</button>
+      </div>
     </div>
 
     <div class="content-area">
+
+      <!-- ── CUSTOMERS TAB ── -->
       <div id="view-customers" class="view-section active">
-        <table>
-          <thead>
-            <tr>
-              <th>Thời gian</th><th>Họ tên</th><th>SĐT</th><th>Sản phẩm</th><th>Ngân sách</th><th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody id="customerTableBody">
-            <tr><td colspan="6" style="text-align: center;">Đang tải dữ liệu...</td></tr>
-          </tbody>
-        </table>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Tổng khách</div>
+            <div class="stat-value" id="statTotal">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Hôm nay</div>
+            <div class="stat-value" id="statToday">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Đã ghim</div>
+            <div class="stat-value" id="statPinned">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Yêu thích</div>
+            <div class="stat-value" id="statFav">—</div>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <input type="text" id="searchInput" placeholder="🔍  Tìm tên, SĐT, email..." class="search-input" oninput="applyFilters()">
+          <select id="filterProduct" class="filter-select" onchange="applyFilters()">
+            <option value="">Tất cả sản phẩm</option>
+            <option value="Biệt thự song lập">Biệt thự song lập</option>
+            <option value="Nhà phố thương mại">Nhà phố thương mại</option>
+            <option value="Căn hộ">Căn hộ</option>
+          </select>
+          <select id="filterBudget" class="filter-select" onchange="applyFilters()">
+            <option value="">Tất cả ngân sách</option>
+            <option value="Dưới 5 tỷ">Dưới 5 tỷ</option>
+            <option value="5 – 10 tỷ">5 – 10 tỷ</option>
+            <option value="Trên 10 tỷ">Trên 10 tỷ</option>
+          </select>
+          <select id="filterDate" class="filter-select" onchange="applyFilters()">
+            <option value="">Tất cả thời gian</option>
+            <option value="today">Hôm nay</option>
+            <option value="week">7 ngày qua</option>
+            <option value="month">30 ngày qua</option>
+          </select>
+          <select id="filterFlag" class="filter-select" onchange="applyFilters()">
+            <option value="">Tất cả</option>
+            <option value="pinned">Đã ghim</option>
+            <option value="fav">Yêu thích</option>
+          </select>
+          <button class="btn btn-outline btn-small" onclick="resetFilters()">✕ Xoá lọc</button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:36px"></th>
+                <th onclick="sortBy('thoi_gian_dang_ky')" class="sortable">Thời gian <span id="sort-thoi_gian_dang_ky"></span></th>
+                <th onclick="sortBy('ho_ten')" class="sortable">Họ tên <span id="sort-ho_ten"></span></th>
+                <th>SĐT</th>
+                <th>Sản phẩm</th>
+                <th onclick="sortBy('ngan_sach')" class="sortable">Ngân sách <span id="sort-ngan_sach"></span></th>
+                <th style="width:160px">Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="customerTableBody">
+              <tr><td colspan="7" style="text-align:center;padding:40px;color:#888">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="emptyState" style="display:none;text-align:center;padding:60px;color:#888">
+          Không tìm thấy kết quả phù hợp
+        </div>
       </div>
 
+      <!-- ── LOGS TAB ── -->
       <div id="view-logs" class="view-section">
-        <table>
-          <thead>
-            <tr>
-              <th>Thời gian</th><th>Hành động</th><th>Khách hàng</th><th>SĐT</th><th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody id="logTableBody">
-            <tr><td colspan="5" style="text-align: center;">Đang tải dữ liệu...</td></tr>
-          </tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Thời gian</th><th>Hành động</th><th>Khách hàng</th><th>SĐT</th><th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="logTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:40px;color:#888">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
+      <!-- ── USERS TAB ── -->
       <div id="view-users" class="view-section">
         <div class="add-user-card">
           <h3>Thêm tài khoản nhân viên mới</h3>
           <form id="addUserForm" class="add-user-form">
-            <input type="text" id="newUsername" placeholder="Tên đăng nhập (vd: hai_nguyen)" required class="form-control">
+            <input type="text" id="newUsername" placeholder="Tên đăng nhập" required class="form-control">
             <input type="password" id="newPassword" placeholder="Mật khẩu" required class="form-control">
             <select id="newRole" class="form-control">
-              <option value="staff">Nhân viên thường (Staff)</option>
+              <option value="staff">Nhân viên (Staff)</option>
               <option value="admin">Quản trị viên (Admin)</option>
             </select>
             <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
           </form>
         </div>
-
-        <table style="margin-top: 24px;">
-          <thead>
-            <tr><th>Ngày tạo</th><th>Tài khoản</th><th>Quyền hạn</th><th>Hành động</th></tr>
-          </thead>
-          <tbody id="userTableBody">
-            <tr><td colspan="4" style="text-align: center;">Đang tải dữ liệu...</td></tr>
-          </tbody>
-        </table>
+        <div class="table-wrap" style="margin-top:24px">
+          <table>
+            <thead>
+              <tr><th>Ngày tạo</th><th>Tài khoản</th><th>Quyền hạn</th><th>Hành động</th></tr>
+            </thead>
+            <tbody id="userTableBody">
+              <tr><td colspan="4" style="text-align:center;padding:40px;color:#888">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
     </div>
   </div>
 
+  <!-- Modal -->
   <div id="commonModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="modalTitle">Chi tiết</h3>
         <span class="close-btn" onclick="closeModal()">&times;</span>
       </div>
-      <div class="modal-body" id="modalBody">
-        </div>
+      <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
 
   <script src="assets/admin.js"></script>
 </body>
