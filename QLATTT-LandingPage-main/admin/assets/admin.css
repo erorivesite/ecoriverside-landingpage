@@ -1,0 +1,173 @@
+/* =========================================
+   1. RESET & CẤU HÌNH CHUNG
+   ========================================= */
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  font-family: 'DM Sans', sans-serif; 
+}
+
+.form-control {
+  width: 100%; 
+  padding: 12px 15px; 
+  border: 1px solid #ddd; 
+  border-radius: 6px; 
+  font-size: 14px; 
+  outline: none; 
+  transition: border-color 0.3s;
+}
+.form-control:focus { border-color: #C9A84C; }
+
+/* =========================================
+   2. HỆ THỐNG NÚT BẤM (BUTTONS)
+   ========================================= */
+.btn { 
+  padding: 10px 16px; 
+  border: none; 
+  border-radius: 6px; 
+  cursor: pointer; 
+  font-size: 13px; 
+  font-weight: 500; 
+  transition: 0.3s; 
+}
+.btn-small { padding: 6px 12px; font-size: 12px; border-radius: 4px; }
+
+.btn-primary { background: #0B1628; color: white; }
+.btn-primary:hover { background: #1C3060; }
+
+.btn-danger { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+.btn-danger:hover { background: #ffcdd2; }
+
+.btn-outline { background: transparent; border: 1px solid #0B1628; color: #0B1628; }
+.btn-outline:hover { background: #0B1628; color: white; }
+
+/* =========================================
+   3. TRANG LOGIN
+   ========================================= */
+body.login-page {
+  background-color: #f4f7f6; 
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  height: 100vh; 
+  color: #333;
+}
+.login-container {
+  background: white; 
+  padding: 40px; 
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+  width: 100%; 
+  max-width: 400px;
+}
+.login-header { text-align: center; margin-bottom: 30px; }
+.login-header h2 { color: #0B1628; margin-bottom: 8px; }
+.login-header p { color: #666; font-size: 14px; }
+.login-container .form-group { margin-bottom: 20px; }
+.login-container label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: #555; }
+.btn-login {
+  width: 100%; padding: 14px; background: #0B1628; color: white;
+  border: none; border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; transition: 0.3s;
+}
+.btn-login:hover { background: #1C3060; }
+.error-msg { color: #e74c3c; font-size: 13px; text-align: center; margin-bottom: 15px; display: none; }
+
+/* =========================================
+   4. BỐ CỤC TRANG DASHBOARD
+   ========================================= */
+body.dashboard-page {
+  display: flex; height: 100vh; background-color: #f4f7f6; color: #333; overflow: hidden;
+}
+
+/* 4.1. Sidebar */
+.sidebar { width: 260px; background: #0B1628; color: white; display: flex; flex-direction: column; }
+.logo { padding: 24px; font-size: 20px; font-weight: 700; color: #C9A84C; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.logo span { color: #fff; font-weight: 400; }
+.user-info { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.user-info .name { font-weight: 600; font-size: 15px; }
+.user-info .role { font-size: 12px; color: #C9A84C; text-transform: uppercase; margin-top: 4px; }
+.nav-menu { flex: 1; padding: 20px 0; }
+.nav-item { padding: 15px 24px; cursor: pointer; transition: 0.3s; font-size: 14px; font-weight: 500; color: #ccc; }
+.nav-item:hover, .nav-item.active { background: #1C3060; color: white; border-left: 3px solid #C9A84C; }
+.nav-item.danger { color: #e74c3c; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }
+
+/* 4.2. Main Content */
+.main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.header { background: white; padding: 20px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+.header h2 { font-size: 20px; color: #0B1628; }
+.header-actions { display: flex; gap: 10px; }
+.content-area { padding: 30px; overflow-y: auto; flex: 1; }
+.view-section { display: none; }
+.view-section.active { display: block; }
+
+/* =========================================
+   5. BẢNG DỮ LIỆU (TABLES)
+   ========================================= */
+table { 
+  width: 100%; background: white; border-collapse: collapse; 
+  border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+}
+th, td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+th { background: #f8f9fa; font-weight: 600; color: #555; text-transform: uppercase; font-size: 12px; letter-spacing: 0.05em; }
+tr:hover { background: #fafafa; }
+
+/* =========================================
+   6. KHU VỰC THÊM TÀI KHOẢN (USER)
+   ========================================= */
+.add-user-card { 
+  background: white; padding: 24px; border-radius: 8px; 
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 24px;
+}
+.add-user-card h3 { font-size: 16px; margin-bottom: 18px; color: #0B1628; }
+.add-user-form { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr 1fr auto; 
+  gap: 15px; 
+  align-items: center; 
+}
+
+/* =========================================
+   7. MODAL (POPUP CHI TIẾT)
+   ========================================= */
+.modal {
+  display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+  width: 100%; height: 100%; background-color: rgba(11, 22, 40, 0.6);
+  backdrop-filter: blur(4px);
+  justify-content: center; align-items: center;
+}
+.modal.active { display: flex; }
+.modal-content {
+  background-color: #fff; padding: 0; border-radius: 10px;
+  width: 90%; max-width: 500px; box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  overflow: hidden; animation: modalFadeIn 0.3s ease-out;
+}
+@keyframes modalFadeIn { 
+  from { opacity: 0; transform: translateY(-20px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}
+.modal-header {
+  background: #f8f9fa; padding: 18px 24px; border-bottom: 1px solid #eee;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-header h3 { font-size: 17px; color: #0B1628; }
+.close-btn { font-size: 28px; color: #888; cursor: pointer; line-height: 1; }
+.close-btn:hover { color: #e74c3c; }
+.modal-body { padding: 24px; }
+
+/* Lưới dữ liệu bên trong Popup */
+.detail-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.detail-item { 
+  display: flex; flex-direction: column; gap: 5px; 
+  padding-bottom: 12px; border-bottom: 1px dashed #eee; 
+}
+.detail-item:last-child { border-bottom: none; padding-bottom: 0; }
+.detail-label { 
+  font-size: 11px; text-transform: uppercase; 
+  letter-spacing: 0.05em; color: #888; font-weight: 600; 
+}
+.detail-value { font-size: 15px; color: #111; font-weight: 500; }
+.detail-value.note { 
+  color: #555; font-style: italic; font-weight: 400; line-height: 1.6; 
+  background: #f9f9f9; padding: 10px; border-radius: 4px; 
+}

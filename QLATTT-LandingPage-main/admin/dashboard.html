@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | ERO Rivesite</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body class="dashboard-page">
+
+  <div class="sidebar">
+    <div class="logo">ERO<span>rivesite</span></div>
+    <div class="user-info">
+      <div class="name" id="displayUsername">Loading...</div>
+      <div class="role" id="displayRole">Role</div>
+    </div>
+    <div class="nav-menu">
+      <div class="nav-item active" onclick="switchTab('customers')">Khách hàng đăng ký</div>
+      <div class="nav-item" id="navLog" onclick="switchTab('logs')">Log Hệ thống</div>
+      <div class="nav-item" id="navUsers" onclick="switchTab('users')" style="display: none;">Quản lý nhân viên</div>
+    </div>
+    <div class="nav-item danger" onclick="logout()">Đăng xuất</div>
+  </div>
+
+  <div class="main-content">
+    <div class="header">
+      <h2 id="pageTitle">Danh sách khách hàng</h2>
+    </div>
+
+    <div class="content-area">
+      <div id="view-customers" class="view-section active">
+        <table>
+          <thead>
+            <tr>
+              <th>Thời gian</th><th>Họ tên</th><th>SĐT</th><th>Sản phẩm</th><th>Ngân sách</th><th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="customerTableBody">
+            <tr><td colspan="6" style="text-align: center;">Đang tải dữ liệu...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="view-logs" class="view-section">
+        <table>
+          <thead>
+            <tr>
+              <th>Thời gian</th><th>Hành động</th><th>Khách hàng</th><th>SĐT</th><th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="logTableBody">
+            <tr><td colspan="5" style="text-align: center;">Đang tải dữ liệu...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="view-users" class="view-section">
+        <div class="add-user-card">
+          <h3>Thêm tài khoản nhân viên mới</h3>
+          <form id="addUserForm" class="add-user-form">
+            <input type="text" id="newUsername" placeholder="Tên đăng nhập (vd: hai_nguyen)" required class="form-control">
+            <input type="password" id="newPassword" placeholder="Mật khẩu" required class="form-control">
+            <select id="newRole" class="form-control">
+              <option value="staff">Nhân viên thường (Staff)</option>
+              <option value="admin">Quản trị viên (Admin)</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
+          </form>
+        </div>
+
+        <table style="margin-top: 24px;">
+          <thead>
+            <tr><th>Ngày tạo</th><th>Tài khoản</th><th>Quyền hạn</th><th>Hành động</th></tr>
+          </thead>
+          <tbody id="userTableBody">
+            <tr><td colspan="4" style="text-align: center;">Đang tải dữ liệu...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="commonModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Chi tiết</h3>
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-body" id="modalBody">
+        </div>
+    </div>
+  </div>
+
+  <script src="assets/admin.js"></script>
+</body>
+</html>

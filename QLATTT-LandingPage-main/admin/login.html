@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập Quản trị | ERO Rivesite</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body class="login-page">
+
+  <div class="login-container">
+    <div class="login-header">
+      <h2>ERO Rivesite</h2>
+      <p>Hệ thống quản trị nội bộ</p>
+    </div>
+
+    <div class="error-msg" id="errorMsg">Sai tài khoản hoặc mật khẩu!</div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Tài khoản</label>
+        <input type="text" id="username" class="form-control" placeholder="Nhập tài khoản" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu" required>
+      </div>
+      <button type="submit" class="btn-login" id="submitBtn">Đăng nhập</button>
+    </form>
+  </div>
+
+  <script src="assets/admin.js"></script>
+</body>
+</html>
