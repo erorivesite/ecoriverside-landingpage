@@ -74,6 +74,17 @@ app.get('/', (_req, res) => {
   res.json({ message: 'ERO Rivesite Backend đang chạy' });
 });
 
+// Bắt lỗi CORS: trả 403 thay vì để Express mặc định trả 500
+app.use((err, _req, res, _next) => {
+  if (err.message && err.message.startsWith('CORS:')) {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'");
+    return res.status(403).end();
+  }
+  res.status(500).end();
+});
+
 // Chạy server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
