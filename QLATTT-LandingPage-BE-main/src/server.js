@@ -8,6 +8,10 @@ const userRoutes   = require('./routes/user');
 
 const app = express();
 
+// Render.com chạy sau reverse proxy (Cloudflare + Render LB)
+// Cần thiết để express-rate-limit đọc đúng IP từ X-Forwarded-For
+app.set('trust proxy', 1);
+
 // Tắt header X-Powered-By (thông tin framework không cần lộ ra ngoài)
 app.disable('x-powered-by');
 
