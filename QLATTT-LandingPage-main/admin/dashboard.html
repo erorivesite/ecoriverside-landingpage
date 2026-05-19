@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | ERO Rivesite</title>
+  <title>Dashboard | ECO Riverside</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/admin.css">
 </head>
+
 <body class="dashboard-page">
 
   <div class="sidebar">
-    <div class="logo">ERO<span>rivesite</span></div>
+    <div class="logo">ECO<span>Riverside</span></div>
     <div class="user-info">
       <div class="name" id="displayUsername">Loading...</div>
       <div class="role" id="displayRole">Role</div>
@@ -62,39 +64,40 @@
           </div>
         </div>
 
-      <!-- Toolbar -->
-      <div class="toolbar">
-        <input type="text" id="searchInput" placeholder="🔍  Tìm tên, SĐT, email..." class="search-input" oninput="applyFilters()">
-        <select id="filterProduct" class="filter-select" onchange="applyFilters()">
-          <option value="">Tất cả sản phẩm</option>
-          <option value="Biệt thự song lập (320–380 m²)">Biệt thự song lập</option>
-          <option value="Biệt thự đơn lập (400–560 m²)">Biệt thự đơn lập</option>
-          <option value="Nhà phố thương mại">Nhà phố thương mại</option>
-          <option value="Cao ốc văn phòng">Cao ốc văn phòng</option>
-          <option value="Trung tâm thương mại">Trung tâm thương mại</option>
-        </select>
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <input type="text" id="searchInput" placeholder="🔍  Tìm tên, SĐT, email..." class="search-input"
+            oninput="applyFilters()">
+          <select id="filterProduct" class="filter-select" onchange="applyFilters()">
+            <option value="">Tất cả sản phẩm</option>
+            <option value="Biệt thự song lập (320–380 m²)">Biệt thự song lập</option>
+            <option value="Biệt thự đơn lập (400–560 m²)">Biệt thự đơn lập</option>
+            <option value="Nhà phố thương mại">Nhà phố thương mại</option>
+            <option value="Cao ốc văn phòng">Cao ốc văn phòng</option>
+            <option value="Trung tâm thương mại">Trung tâm thương mại</option>
+          </select>
 
-        <select id="filterBudget" class="filter-select" onchange="applyFilters()">
-          <option value="">Tất cả ngân sách</option>
-          <option value="Dưới 5 tỷ">Dưới 5 tỷ</option>
-          <option value="5 – 10 tỷ">5 – 10 tỷ</option>
-          <option value="10 – 20 tỷ">10 – 20 tỷ</option>
-          <option value="20 – 50 tỷ">20 – 50 tỷ</option>
-          <option value="Trên 50 tỷ">Trên 50 tỷ</option>
-        </select>
-        <select id="filterDate" class="filter-select" onchange="applyFilters()">
-          <option value="">Tất cả thời gian</option>
-          <option value="today">Hôm nay</option>
-          <option value="week">7 ngày qua</option>
-          <option value="month">30 ngày qua</option>
-        </select>
-        <select id="filterFlag" class="filter-select" onchange="applyFilters()">
-          <option value="">Tất cả</option>
-          <option value="pinned">Đã ghim</option>
-          <option value="fav">Yêu thích</option>
-        </select>
-        <button class="btn btn-outline btn-small" onclick="resetFilters()">✕ Xoá lọc</button>
-      </div>
+          <select id="filterBudget" class="filter-select" onchange="applyFilters()">
+            <option value="">Tất cả ngân sách</option>
+            <option value="Dưới 5 tỷ">Dưới 5 tỷ</option>
+            <option value="5 – 10 tỷ">5 – 10 tỷ</option>
+            <option value="10 – 20 tỷ">10 – 20 tỷ</option>
+            <option value="20 – 50 tỷ">20 – 50 tỷ</option>
+            <option value="Trên 50 tỷ">Trên 50 tỷ</option>
+          </select>
+          <select id="filterDate" class="filter-select" onchange="applyFilters()">
+            <option value="">Tất cả thời gian</option>
+            <option value="today">Hôm nay</option>
+            <option value="week">7 ngày qua</option>
+            <option value="month">30 ngày qua</option>
+          </select>
+          <select id="filterFlag" class="filter-select" onchange="applyFilters()">
+            <option value="">Tất cả</option>
+            <option value="pinned">Đã ghim</option>
+            <option value="fav">Yêu thích</option>
+          </select>
+          <button class="btn btn-outline btn-small" onclick="resetFilters()">✕ Xoá lọc</button>
+        </div>
 
         <!-- Table -->
         <div class="table-wrap">
@@ -102,7 +105,8 @@
             <thead>
               <tr>
                 <th style="width:36px"></th>
-                <th onclick="sortBy('thoi_gian_dang_ky')" class="sortable">Thời gian <span id="sort-thoi_gian_dang_ky"></span></th>
+                <th onclick="sortBy('thoi_gian_dang_ky')" class="sortable">Thời gian <span
+                    id="sort-thoi_gian_dang_ky"></span></th>
                 <th onclick="sortBy('ho_ten')" class="sortable">Họ tên <span id="sort-ho_ten"></span></th>
                 <th>SĐT</th>
                 <th>Sản phẩm</th>
@@ -111,7 +115,9 @@
               </tr>
             </thead>
             <tbody id="customerTableBody">
-              <tr><td colspan="7" style="text-align:center;padding:40px;color:#888">Đang tải...</td></tr>
+              <tr>
+                <td colspan="7" style="text-align:center;padding:40px;color:#888">Đang tải...</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -126,11 +132,17 @@
           <table>
             <thead>
               <tr>
-                <th>Thời gian</th><th>Hành động</th><th>Khách hàng</th><th>SĐT</th><th>Hành động</th>
+                <th>Thời gian</th>
+                <th>Hành động</th>
+                <th>Đối tượng</th>
+                <th>Người thao tác</th>
+                <th></th>
               </tr>
             </thead>
             <tbody id="logTableBody">
-              <tr><td colspan="5" style="text-align:center;padding:40px;color:#888">Đang tải...</td></tr>
+              <tr>
+                <td colspan="5" style="text-align:center;padding:40px;color:#888">Đang tải...</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -153,10 +165,17 @@
         <div class="table-wrap" style="margin-top:24px">
           <table>
             <thead>
-              <tr><th>Ngày tạo</th><th>Tài khoản</th><th>Quyền hạn</th><th>Hành động</th></tr>
+              <tr>
+                <th>Ngày tạo</th>
+                <th>Tài khoản</th>
+                <th>Quyền hạn</th>
+                <th>Hành động</th>
+              </tr>
             </thead>
             <tbody id="userTableBody">
-              <tr><td colspan="4" style="text-align:center;padding:40px;color:#888">Đang tải...</td></tr>
+              <tr>
+                <td colspan="4" style="text-align:center;padding:40px;color:#888">Đang tải...</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -181,4 +200,5 @@
 
   <script src="assets/admin.js"></script>
 </body>
+
 </html>

@@ -197,8 +197,7 @@ if (mainForm) {
       else alert(data.message || 'Có lỗi xảy ra từ máy chủ.');
     })
     .catch(() => {
-      /* Fallback: hiển thị thành công khi không có server */
-      showSuccess();
+      alert('Không thể kết nối máy chủ. Vui lòng thử lại sau.');
     })
     .finally(() => {
       btn.textContent = originalText;

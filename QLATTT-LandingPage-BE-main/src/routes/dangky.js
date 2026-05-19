@@ -14,13 +14,23 @@ const esc = (str) =>
 router.post('/', async (req, res) => {
   const { ho_ten, so_dien_thoai, email, san_pham, ngan_sach, thoi_gian_lien_he, ghi_chu } = req.body;
 
-  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress;
+  const rawIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || '';
+  const ipRegex = /^[\d.:a-fA-F]+$/;
+  const ip = ipRegex.test(rawIp) ? rawIp : 'invalid';
 
   if (!ho_ten || !so_dien_thoai) {
-    db.query(`INSERT INTO log (hanh_dong, dia_chi_ip) VALUES (?, ?)`, ['thiếu thông tin', ip],
+    db.query(`INSERT INTO log (hanh_dong, dia_chi_ip, doi_tuong) VALUES (?, ?, ?)`,
+      ['đăng ký thiếu thông tin', ip, `${ho_ten || '?'} (${so_dien_thoai || '?'})`],
       (logErr) => { if (logErr) console.error('❌ LOG ERROR:', logErr.message); });
     return res.status(400).json({ success: false, message: 'Thiếu họ tên hoặc số điện thoại' });
   }
+
+  // Giới hạn độ dài và validate định dạng (CWE-20)
+  if (ho_ten.trim().length > 255)
+    return res.status(400).json({ success: false, message: 'Họ tên quá dài' });
+  const phoneRegex = /^[0-9+\s()\-]{7,15}$/;
+  if (!phoneRegex.test(so_dien_thoai.trim()))
+    return res.status(400).json({ success: false, message: 'Số điện thoại không hợp lệ' });
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (email && !emailRegex.test(email)) {
@@ -40,8 +50,8 @@ router.post('/', async (req, res) => {
 
     res.json({ success: true, message: 'Đăng ký thành công' });
 
-    db.query(`INSERT INTO log (khach_hang_id, hanh_dong, dia_chi_ip) VALUES (?, ?, ?)`,
-      [result.insertId, 'đăng ký mới', ip],
+    db.query(`INSERT INTO log (khach_hang_id, hanh_dong, dia_chi_ip, doi_tuong) VALUES (?, ?, ?, ?)`,
+      [result.insertId, 'đăng ký mới', ip, `${ho_ten} (${so_dien_thoai})`],
       (logErr) => { if (logErr) console.error('❌ LOG ERROR:', logErr.message); });
 
     // ─── MAIL ADMIN ───
@@ -156,21 +166,26 @@ router.post('/', async (req, res) => {
   });
 });
 
-router.get('/danh-sach', verifyToken, isAdmin, (req, res) => {
+router.get('/danh-sach', verifyToken, (_req, res) => {
   db.query(`SELECT * FROM khach_hang ORDER BY id DESC`, (err, rows) => {
     if (err) return res.status(500).json({ success: false });
     res.json({ success: true, data: rows });
   });
 });
 
-router.get('/log', verifyToken, isAdmin, (req, res) => {
-  db.query(`SELECT * FROM log ORDER BY id DESC`, (err, rows) => {
-    if (err) return res.status(500).json({ success: false });
-    res.json({ success: true, data: rows });
-  });
+router.get('/log', verifyToken, isAdmin, (_req, res) => {
+  db.query(
+    `SELECT l.*, k.ho_ten, k.so_dien_thoai
+     FROM log l LEFT JOIN khach_hang k ON l.khach_hang_id = k.id
+     ORDER BY l.id DESC`,
+    (err, rows) => {
+      if (err) return res.status(500).json({ success: false });
+      res.json({ success: true, data: rows });
+    }
+  );
 });
 
-router.get('/:id', verifyToken, isAdmin, (req, res) => {
+router.get('/:id', verifyToken, (req, res) => {
   db.query(`SELECT * FROM khach_hang WHERE id = ?`, [req.params.id], (err, rows) => {
     if (err) return res.status(500).json({ success: false });
     if (!rows.length) return res.status(404).json({ success: false });
@@ -179,9 +194,19 @@ router.get('/:id', verifyToken, isAdmin, (req, res) => {
 });
 
 router.delete('/:id', verifyToken, isAdmin, (req, res) => {
-  db.query(`DELETE FROM khach_hang WHERE id = ?`, [req.params.id], (err) => {
-    if (err) return res.status(500).json({ success: false });
-    res.json({ success: true });
+  db.query(`SELECT ho_ten, so_dien_thoai FROM khach_hang WHERE id = ?`, [req.params.id], (selErr, rows) => {
+    if (selErr) return res.status(500).json({ success: false });
+    if (!rows.length) return res.status(404).json({ success: false, message: 'Không tìm thấy' });
+    const { ho_ten, so_dien_thoai } = rows[0];
+    db.query(`DELETE FROM khach_hang WHERE id = ?`, [req.params.id], (err) => {
+      if (err) return res.status(500).json({ success: false });
+      res.json({ success: true });
+      db.query(
+        `INSERT INTO log (hanh_dong, doi_tuong, nguoi_thao_tac) VALUES (?, ?, ?)`,
+        ['xóa khách hàng', `${ho_ten} (${so_dien_thoai})`, req.user.username],
+        (logErr) => { if (logErr) console.error('❌ LOG ERROR:', logErr.message); }
+      );
+    });
   });
 });
 

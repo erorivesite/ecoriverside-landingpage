@@ -74,6 +74,8 @@ HƯỚNG DẪN CÀI ĐẶT
       khach_hang_id INT,
       hanh_dong VARCHAR(100),
       dia_chi_ip VARCHAR(45),
+      doi_tuong VARCHAR(255),
+      nguoi_thao_tac VARCHAR(100),
       thoi_gian DATETIME DEFAULT NOW()
     );
 
@@ -89,6 +91,10 @@ HƯỚNG DẪN CÀI ĐẶT
     VALUES ('admin', 'admin123', 'admin');
 
 --------------------------------------------------
+
+    -- Migration cho database đang chạy (chạy 1 lần):
+    ALTER TABLE log ADD COLUMN doi_tuong VARCHAR(255) AFTER dia_chi_ip;
+    ALTER TABLE log ADD COLUMN nguoi_thao_tac VARCHAR(100) AFTER doi_tuong;
 
     node setupAdmin.js
 

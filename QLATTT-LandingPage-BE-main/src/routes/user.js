@@ -15,7 +15,7 @@ router.use(verifyToken, isAdmin);
 // API: Lấy danh sách tài khoản nhân viên
 // GET /api/users
 // ─────────────────────────────────────────
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   // Không select cột password ra để bảo mật
   db.query(
     'SELECT id, username, role, created_at FROM users ORDER BY created_at DESC', 
@@ -56,9 +56,14 @@ router.post('/', async (req, res) => {
       db.query(
         'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
         [username, hashedPassword, userRole],
-        (err2, insertResult) => {
+        (err2) => {
           if (err2) return res.status(500).json({ success: false, message: 'Lỗi khi lưu tài khoản' });
           res.json({ success: true, message: 'Đã tạo tài khoản nhân viên thành công!' });
+          db.query(
+            `INSERT INTO log (hanh_dong, doi_tuong, nguoi_thao_tac) VALUES (?, ?, ?)`,
+            ['tạo tài khoản', `${username} (${userRole})`, req.user.username],
+            (logErr) => { if (logErr) console.error('❌ LOG ERROR:', logErr.message); }
+          );
         }
       );
     });
@@ -80,9 +85,19 @@ router.delete('/:id', (req, res) => {
     return res.status(400).json({ success: false, message: 'Bạn không thể tự xóa tài khoản đang đăng nhập' });
   }
 
-  db.query('DELETE FROM users WHERE id = ?', [targetUserId], (err, result) => {
-    if (err) return res.status(500).json({ success: false, message: 'Lỗi khi xóa tài khoản' });
-    res.json({ success: true, message: 'Đã xóa tài khoản thành công!' });
+  db.query('SELECT username FROM users WHERE id = ?', [targetUserId], (selErr, rows) => {
+    if (selErr) return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
+    if (!rows.length) return res.status(404).json({ success: false, message: 'Tài khoản không tồn tại' });
+    const targetUsername = rows[0].username;
+    db.query('DELETE FROM users WHERE id = ?', [targetUserId], (err) => {
+      if (err) return res.status(500).json({ success: false, message: 'Lỗi khi xóa tài khoản' });
+      res.json({ success: true, message: 'Đã xóa tài khoản thành công!' });
+      db.query(
+        `INSERT INTO log (hanh_dong, doi_tuong, nguoi_thao_tac) VALUES (?, ?, ?)`,
+        ['xóa tài khoản', targetUsername, req.user.username],
+        (logErr) => { if (logErr) console.error('❌ LOG ERROR:', logErr.message); }
+      );
+    });
   });
 });
 

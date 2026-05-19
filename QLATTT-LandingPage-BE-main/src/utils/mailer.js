@@ -2,8 +2,7 @@ const SibApiV3Sdk = require('sib-api-v3-sdk');
 
 const client = SibApiV3Sdk.ApiClient.instance;
 
-console.log('BREVO_API_KEY:', process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.substring(0, 20) + '...' : 'UNDEFINED');
-console.log('SMTP_USER:', process.env.SMTP_USER);
+console.log('Mailer configured:', !!process.env.BREVO_API_KEY);
 
 client.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
 

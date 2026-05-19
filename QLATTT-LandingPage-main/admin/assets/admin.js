@@ -4,6 +4,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const username = localStorage.getItem('ero_username');
   const API = 'https://ecoriverside-landingpage.onrender.com';
 
+  function escHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   const authHeaders = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
 
   // ── State ──
@@ -73,7 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── UTILS ──
   function handleAuthError(status, data) {
-    if (status === 401 || status === 403) { alert(data.message); window.logout(); }
+    if (status === 401) { alert(data.message); window.logout(); }
+    else if (status === 403) { alert('Bạn không có quyền thực hiện thao tác này.'); }
   }
 
   window.logout = () => {
@@ -199,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const isPinned = pinnedIds.includes(c.id);
       const isFav    = favIds.includes(c.id);
       const budgetBadge = c.ngan_sach
-        ? `<span class="badge ${c.ngan_sach.includes('Trên') ? 'badge-gold' : c.ngan_sach.includes('5 –') ? 'badge-green' : 'badge-blue'}">${c.ngan_sach}</span>`
+        ? `<span class="badge ${c.ngan_sach.includes('Trên') ? 'badge-gold' : c.ngan_sach.includes('5 –') ? 'badge-green' : 'badge-blue'}">${escHtml(c.ngan_sach)}</span>`
         : '<span style="color:#bbb">—</span>';
 
       return `<tr style="${isPinned ? 'background:#fffde7;' : ''}">
@@ -208,16 +219,16 @@ document.addEventListener('DOMContentLoaded', () => {
           ${isFav    ? '<span title="Yêu thích" style="color:#e53935;font-size:15px;">❤️</span>' : ''}
         </td>
         <td style="color:#888;font-size:12px;">${date}</td>
-        <td style="font-weight:600;color:#0B1628;">${c.ho_ten}</td>
-        <td><a href="tel:${c.so_dien_thoai}" style="color:#1565c0;text-decoration:none;">${c.so_dien_thoai}</a></td>
-        <td>${c.san_pham || '<span style="color:#bbb">—</span>'}</td>
+        <td style="font-weight:600;color:#0B1628;">${escHtml(c.ho_ten)}</td>
+        <td><a href="tel:${escHtml(c.so_dien_thoai)}" style="color:#1565c0;text-decoration:none;">${escHtml(c.so_dien_thoai)}</a></td>
+        <td>${c.san_pham ? escHtml(c.san_pham) : '<span style="color:#bbb">—</span>'}</td>
         <td>${budgetBadge}</td>
         <td>
           <div class="actions-cell">
             <button class="btn-icon ${isPinned ? 'active-pin' : ''}" onclick="togglePin(${c.id})" title="${isPinned ? 'Bỏ ghim' : 'Ghim'}">📌</button>
             <button class="btn-icon ${isFav ? 'active-fav' : ''}" onclick="toggleFav(${c.id})" title="${isFav ? 'Bỏ yêu thích' : 'Yêu thích'}">❤️</button>
             <button class="btn btn-outline btn-small" onclick="viewCustomerDetails(${c.id})">Chi tiết</button>
-            <button class="btn btn-danger btn-small" onclick="deleteCustomer(${c.id}, '${c.ho_ten.replace(/'/g,"\\'")}')">Xoá</button>
+            ${role === 'admin' ? `<button class="btn btn-danger btn-small" onclick="deleteCustomer(${c.id}, ${escHtml(JSON.stringify(c.ho_ten))})">Xoá</button>` : ''}
           </div>
         </td>
       </tr>`;
@@ -255,13 +266,13 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('modalTitle').textContent = 'Chi tiết khách hàng';
       document.getElementById('modalBody').innerHTML = `
         <div class="detail-grid">
-          <div class="detail-item"><span class="detail-label">Họ và tên</span><span class="detail-value">${c.ho_ten}</span></div>
-          <div class="detail-item"><span class="detail-label">Số điện thoại</span><span class="detail-value"><a href="tel:${c.so_dien_thoai}" style="color:#1565c0">${c.so_dien_thoai}</a></span></div>
-          <div class="detail-item"><span class="detail-label">Email</span><span class="detail-value">${c.email ? `<a href="mailto:${c.email}" style="color:#1565c0">${c.email}</a>` : 'Không có'}</span></div>
-          <div class="detail-item"><span class="detail-label">Sản phẩm</span><span class="detail-value">${c.san_pham || '—'}</span></div>
-          <div class="detail-item"><span class="detail-label">Ngân sách</span><span class="detail-value">${c.ngan_sach || '—'}</span></div>
-          <div class="detail-item"><span class="detail-label">Thời gian liên hệ</span><span class="detail-value">${c.thoi_gian_lien_he || 'Bất kỳ lúc nào'}</span></div>
-          <div class="detail-item"><span class="detail-label">Ghi chú</span><div class="detail-value note">${c.ghi_chu || 'Không có'}</div></div>
+          <div class="detail-item"><span class="detail-label">Họ và tên</span><span class="detail-value">${escHtml(c.ho_ten)}</span></div>
+          <div class="detail-item"><span class="detail-label">Số điện thoại</span><span class="detail-value"><a href="tel:${escHtml(c.so_dien_thoai)}" style="color:#1565c0">${escHtml(c.so_dien_thoai)}</a></span></div>
+          <div class="detail-item"><span class="detail-label">Email</span><span class="detail-value">${c.email ? `<a href="mailto:${escHtml(c.email)}" style="color:#1565c0">${escHtml(c.email)}</a>` : 'Không có'}</span></div>
+          <div class="detail-item"><span class="detail-label">Sản phẩm</span><span class="detail-value">${escHtml(c.san_pham || '—')}</span></div>
+          <div class="detail-item"><span class="detail-label">Ngân sách</span><span class="detail-value">${escHtml(c.ngan_sach || '—')}</span></div>
+          <div class="detail-item"><span class="detail-label">Thời gian liên hệ</span><span class="detail-value">${escHtml(c.thoi_gian_lien_he || 'Bất kỳ lúc nào')}</span></div>
+          <div class="detail-item"><span class="detail-label">Ghi chú</span><div class="detail-value note">${escHtml(c.ghi_chu || 'Không có')}</div></div>
           <div class="detail-item"><span class="detail-label">Thời gian đăng ký</span><span class="detail-value">${date}</span></div>
         </div>`;
       document.getElementById('modalFooter') && (document.getElementById('modalFooter').innerHTML = '');
@@ -273,13 +284,19 @@ document.addEventListener('DOMContentLoaded', () => {
   window.exportCSV = () => {
     if (!allCustomers.length) return toast('Không có dữ liệu');
     const headers = ['ID','Họ tên','SĐT','Email','Sản phẩm','Ngân sách','Thời gian liên hệ','Ghi chú','Thời gian đăng ký'];
+    // Bảo vệ CSV Injection (CWE-1236): wrap trong dấu nháy kép, escape nháy kép nội dung, prefix ký tự công thức
+    const csvCell = (val) => {
+      const s = String(val ?? '');
+      const safe = /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
+      return '"' + safe.replace(/"/g, '""') + '"';
+    };
     const rows = allCustomers.map(c => [
       c.id, c.ho_ten, c.so_dien_thoai, c.email||'',
       c.san_pham||'', c.ngan_sach||'', c.thoi_gian_lien_he||'',
-      (c.ghi_chu||'').replace(/,/g,' '),
+      c.ghi_chu||'',
       new Date(c.thoi_gian_dang_ky).toLocaleString('vi-VN')
     ]);
-    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+    const csv = [headers, ...rows].map(r => r.map(csvCell).join(',')).join('\n');
     const a = document.createElement('a');
     a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
     a.download = `khachhang_${new Date().toISOString().slice(0,10)}.csv`;
@@ -299,12 +316,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!data.data?.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:#888">Chưa có log</td></tr>'; return; }
       data.data.forEach(item => {
         const date  = new Date(item.thoi_gian).toLocaleString('vi-VN');
-        const color = item.hanh_dong.includes('thất bại') ? '#c62828' : '#2e7d32';
+        const isDelete = item.hanh_dong.startsWith('xóa');
+        const isError  = item.hanh_dong.includes('thiếu') || item.hanh_dong.includes('thất bại');
+        const color = isDelete ? '#e65100' : isError ? '#c62828' : '#2e7d32';
+        const doiTuong = item.doi_tuong || item.ho_ten || '—';
+        const nguoiThaoTac = item.nguoi_thao_tac || 'hệ thống';
         tbody.innerHTML += `<tr>
           <td style="color:#888;font-size:12px">${date}</td>
-          <td style="color:${color};font-weight:500">${item.hanh_dong}</td>
-          <td>${item.ho_ten || '—'}</td>
-          <td>${item.so_dien_thoai || '—'}</td>
+          <td style="color:${color};font-weight:500">${escHtml(item.hanh_dong)}</td>
+          <td>${escHtml(doiTuong)}</td>
+          <td><span style="background:#f0f4ff;color:#1565c0;padding:2px 8px;border-radius:12px;font-size:12px">${escHtml(nguoiThaoTac)}</span></td>
           <td><button class="btn btn-outline btn-small" onclick="viewLogDetails(${item.id})">Chi tiết</button></td>
         </tr>`;
       });
@@ -320,10 +341,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modalBody').innerHTML = `
       <div class="detail-grid">
         <div class="detail-item"><span class="detail-label">Thời gian</span><span class="detail-value">${date}</span></div>
-        <div class="detail-item"><span class="detail-label">Hành động</span><span class="detail-value">${logEntry.hanh_dong}</span></div>
-        <div class="detail-item"><span class="detail-label">Địa chỉ IP</span><span class="detail-value">${logEntry.dia_chi_ip}</span></div>
-        <div class="detail-item"><span class="detail-label">Khách hàng</span><span class="detail-value">${logEntry.ho_ten || '—'}</span></div>
-        <div class="detail-item"><span class="detail-label">SĐT</span><span class="detail-value">${logEntry.so_dien_thoai || '—'}</span></div>
+        <div class="detail-item"><span class="detail-label">Hành động</span><span class="detail-value">${escHtml(logEntry.hanh_dong)}</span></div>
+        <div class="detail-item"><span class="detail-label">Đối tượng</span><span class="detail-value">${escHtml(logEntry.doi_tuong || logEntry.ho_ten || '—')}</span></div>
+        <div class="detail-item"><span class="detail-label">Người thao tác</span><span class="detail-value">${escHtml(logEntry.nguoi_thao_tac || 'hệ thống')}</span></div>
+        <div class="detail-item"><span class="detail-label">Địa chỉ IP</span><span class="detail-value">${escHtml(logEntry.dia_chi_ip || '—')}</span></div>
       </div>`;
     document.getElementById('commonModal').classList.add('active');
   };
