@@ -1,26 +1,27 @@
 require('dotenv').config();
 const mysql = require('mysql2');
 
-// Khởi tạo kết nối và gán vào biến 'db'
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
   ssl: {
-    rejectUnauthorized: false // Bắt buộc phải có khi dùng Aiven
+    rejectUnauthorized: false
   }
 });
 
-// Kiểm tra kết nối
-db.connect(err => {
+db.getConnection((err, connection) => {
   if (err) {
     console.error('Lỗi kết nối database:', err.message);
     return;
   }
-  console.log('Kết nối MySQL (Aiven) thành công!');
+  console.log('Kết nối MySQL (Railway) thành công!');
+  connection.release();
 });
 
-// Xuất biến 'db' ra để các file khác (như routes) có thể require và dùng
 module.exports = db;
